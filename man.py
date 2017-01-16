@@ -31,8 +31,14 @@ def get_date_from_timestamp(timestamp):
 
 def convert_to_timestamp(seconds,timestamp):
     ts = ''
-    ts+=get_date(timestamp)
+    ts += get_date_from_timestamp(timestamp)
+    rem_h = seconds%3600
+    h = seconds/3600
+    s = rem_h%60
+    m = rem_h/60
     
+    ts += str(h).zfill(2)+':' + str(m).zfill(2) +':'+ str(s).zfill(2) + 'Z'
+    return ts 
     
 
 
@@ -87,8 +93,8 @@ def conv(sec, sub):
 
 
 
-print convert_to_seconds('2016-10-16T14:54:49Z')
-
+x =convert_to_seconds('2016-10-16T14:54:49Z')
+print convert_to_timestamp(x, '2016-10-16T14:54:49Z')
 
 
 
