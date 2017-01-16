@@ -2,7 +2,7 @@ import gpxpy.parser as parser
 import numpy as np
 import sys
 import fileinput
-
+import re
 
 
 # TODO list:
@@ -25,8 +25,30 @@ def get_end_timestamp(gpx_file):
     samples = parse(gpx_file)
     return samples[-1]
 
+def get_date_from_timestamp(timestamp):
+    date = timestamp.split('T')[0] + 'T'
+    return date
+
+def convert_to_timestamp(seconds,timestamp):
+    ts = ''
+    ts+=get_date(timestamp)
+    
+    
 
 
+
+def convert_to_seconds(timestamp):
+    # convert the timestamp to seconds
+    ts = timestamp.split('T')
+    ts = ts[1]
+    ts = re.sub('[^0-9:]','',ts).split(':')
+    sec = int(ts[0])*3600 + int(ts[1])*60+int(ts[2])
+    return sec
+
+
+    
+    
+    
 
 
 def parse_gpx(gpx_file):
@@ -65,6 +87,7 @@ def conv(sec, sub):
 
 
 
+print convert_to_seconds('2016-10-16T14:54:49Z')
 
 
 
