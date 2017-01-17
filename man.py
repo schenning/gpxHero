@@ -24,6 +24,12 @@ def get_start_timestamp(gpx_file):
 def get_end_timestamp(gpx_file):
     samples = parse(gpx_file)
     return samples[-1]
+    
+
+def get_duration(gpx_file):
+    s = convert_to_seconds(str(get_end_timestamp)) - convert_to_seconds(str(get_start_timestamp))
+    return s
+
 
 def get_date_from_timestamp(timestamp):
     date = timestamp.split('T')[0] + 'T'
@@ -85,10 +91,11 @@ def conv(sec, sub):
 
     pass
 
-
-
-print convert_to_seconds('2016-10-16T14:54:49Z')
-
+#if '__main__'==1:
+gpx_file = parse_gpx('Laffing_i_ghettoen.gpx')
+    
+    # print convert_to_seconds('2016-10-16T14:54:49Z')
+print get_duration(gpx_file)
 
 
 
