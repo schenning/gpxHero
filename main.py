@@ -39,7 +39,16 @@ def convert_to_timestamp(seconds,timestamp):
     return ts 
     
 
-def get_distance(timestamp):
+def get_distance():
+    x = raw_input('Write in the length of the run in kilometers\n\n')
+    return x    
+
+def distance_and_time_to_pace(distance, time_in_seconds):
+    rem = time_in_seconds % 60
+    m = time_in_seconds/60
+    pace = str(m).zfill(2) + str(rem).zfill(2)
+    return pace
+
     
 
 def convert_to_seconds(timestamp):
@@ -50,6 +59,20 @@ def convert_to_seconds(timestamp):
     ts = re.sub('[^0-9:]','',ts).split(':')
     sec = int(ts[0])*3600 + int(ts[1])*60+int(ts[2])
     return sec
+
+def set_date():
+    print 'Write in todays date\n'
+    ts = raw_input('On the form yy-mm-dd\n')
+    return ts 'T'
+
+def set_start_time():
+    print 'Write the start time'
+    st = raw_input('On the form hh:mm:ss')
+    return st + 'Z'
+
+
+def 
+
 
 
 
@@ -68,6 +91,8 @@ for elem in timestamps:
 print get_start_timestamp(timestamps)
 print get_end_timestamp(timestamps)
 print get_duration(timestamps)
+
+print get_distance()
 """
 for i, line in enumerate(fileinput.input('Laffing_i_ghettoen.gpx', inplace=1)):
     if '<time>' in line:
