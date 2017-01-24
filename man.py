@@ -14,20 +14,20 @@ import re
 
 
 def get_number_of_samples(gpx_file):
-    samples = len(parse(gpx_file))
+    samples = len(parse_gpx(gpx_file))
     return samples
 
 def get_start_timestamp(gpx_file):
-    samples = parse(gpx_file)
+    samples = parse_gpx(gpx_file)
     return samples[0]
 
 def get_end_timestamp(gpx_file):
-    samples = parse(gpx_file)
+    samples = parse_gpx(gpx_file)
     return samples[-1]
     
 
 def get_duration(gpx_file):
-    s = convert_to_seconds(str(get_end_timestamp)) - convert_to_seconds(str(get_start_timestamp))
+    s = convert_to_seconds(str(get_end_timestamp(gpx_file))) - convert_to_seconds(str(get_start_timestamp(gpx_file)))
     return s
 
 
@@ -52,6 +52,7 @@ def convert_to_timestamp(seconds,timestamp):
 def convert_to_seconds(timestamp):
     # convert the timestamp to seconds
     ts = timestamp.split('T')
+    print ts
     ts = ts[1]
     ts = re.sub('[^0-9:]','',ts).split(':')
     sec = int(ts[0])*3600 + int(ts[1])*60+int(ts[2])
@@ -97,18 +98,13 @@ def conv(sec, sub):
 
     pass
 
-<<<<<<< HEAD
-#if '__main__'==1:
 gpx_file = parse_gpx('Laffing_i_ghettoen.gpx')
-    
-    # print convert_to_seconds('2016-10-16T14:54:49Z')
-print get_duration(gpx_file)
-=======
-
-
-x =convert_to_seconds('2016-10-16T14:54:49Z')
-print convert_to_timestamp(x, '2016-10-16T14:54:49Z')
->>>>>>> acf6e6466a82da7c8d3809ab698abfb61d166375
+for elem in gpx_file:
+    print elem.replace(' ','T')   
+#print get_duration(gpx_file)
+print get_end_timestamp(gpx_file)
+#x =convert_to_seconds('2016-10-16T14:54:49Z')
+#print convert_to_timestamp(x, '2016-10-16T14:54:49Z')
 
 
 
