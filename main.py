@@ -2,19 +2,49 @@ import sys
 import fileinput
 #import man
 import re
+import six
+
+class gpxObject:
+    def __init__(self, gpx_filename):
 
 
-def get_number_of_samples(lines):
-    return len(lines)
+        if not isinstance(gpx_filename, six.string_types):
+            print "Could not open GPX file"
+            raise NameError('Try again.')
 
 
-def get_start_timestamp(lines):
-    for line in lines:
-        if '<time>' in line:
-            return line.replace('<time>', '').replace('</time>', '').replace(' ','')
+        self.gpx = 0
+        self.lines = [line.rstrip('\n') for line in open(gpx_filename)]
+        self.timestamps = []
+        self.coordinates = []
+        for l in self.lines:
+            if '<time>' in l:
+                self.timestamps.append(l)
 
-def get_end_timestamp(lines):
-    return lines[-1].replace('<time>', '').replace('</time>', '').replace(' ','')
+            if '<trkpt' in l:
+                self.coordinates.append(l.replace('<trkpt','').replace('>',''))
+
+
+        self.samples = self.get_number_of_samples()
+        print self.samples
+
+        self.start_timestamp = self.get_start_timestamp()
+
+        print self.start_timestamp
+        self.end_timestamp = self.get_end_timestamp()
+        print self.end_timestamp
+
+    def get_number_of_samples(self):
+        return len(self.timestamps)
+
+
+    def get_start_timestamp(self):
+        for line in self.lines:
+            if '<time>' in line:
+                return line.replace('<time>', '').replace('</time>', '').replace(' ','')
+
+    def get_end_timestamp(self):
+        return self.timestamps[-1].replace('<time>', '').replace('</time>', '').replace(' ','')
 
     
 
@@ -76,6 +106,12 @@ def parse_coordinates():
 
 
 
+x = gpxObject('Laffing_i_ghettoen.gpx')
+#for elem in x.timestamps:
+#    print elem
+
+#print x.get_number_of_samples()
+"""
 timestamps = []
 coordinates = []
 lines = [line.rstrip('\n') for line in open('Laffing_i_ghettoen.gpx')]
@@ -92,7 +128,7 @@ for elem in timestamps:
 
 for elem in coordinates:
     print elem
-
+"""
 #print get_start_timestamp(timestamps)
 #print get_end_timestamp(timestamps)
 #print get_duration(timestamps)
