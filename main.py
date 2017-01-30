@@ -63,7 +63,7 @@ def convert_to_seconds(timestamp):
 def set_date():
     print 'Write in todays date\n'
     ts = raw_input('On the form yy-mm-dd\n')
-    return ts 'T'
+    return ts +'T'
 
 def set_start_time():
     print 'Write the start time'
@@ -71,28 +71,32 @@ def set_start_time():
     return st + 'Z'
 
 
-def 
-
+def parse_coordinates():
+    pass    
 
 
 
 timestamps = []
+coordinates = []
 lines = [line.rstrip('\n') for line in open('Laffing_i_ghettoen.gpx')]
 for l in lines:
     if '<time>' in l:
          timestamps.append(l)
 
+    if '<trkpt' in l:
+        coordinates.append(l.replace('<trkpt','').replace('>',''))
+
 
 for elem in timestamps:
     print convert_to_seconds(elem)
 
+for elem in coordinates:
+    print elem
 
-
-print get_start_timestamp(timestamps)
-print get_end_timestamp(timestamps)
-print get_duration(timestamps)
-
-print get_distance()
+#print get_start_timestamp(timestamps)
+#print get_end_timestamp(timestamps)
+#print get_duration(timestamps)
+#print get_distance()
 """
 for i, line in enumerate(fileinput.input('Laffing_i_ghettoen.gpx', inplace=1)):
     if '<time>' in line:
