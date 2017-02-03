@@ -3,8 +3,12 @@ import fileinput
 #import man
 import re
 import six
+from math import radians, cos, sin, asin, sqrt
 
 class gpxObject:
+
+
+
     def __init__(self, gpx_filename):
 
 
@@ -31,11 +35,81 @@ class gpxObject:
         self.start_timestamp = self.get_start_timestamp()
 
         print self.start_timestamp
-        self.end_timestamp = self.get_end_timestamp()
+        x = self.end_timestamp = self.get_end_timestamp()
         print self.end_timestamp
+
+        #### Convert to seconds
+
+
+        # convert the timestamp to seconds
+        ts = self.end_timestamp.split('T')
+        ts = ts[1]
+        ts = re.sub('[^0-9:]','',ts).split(':')
+        sec_end = int(ts[0])*3600 + int(ts[1])*60+int(ts[2])
+        # convert the timestamp to seconds
+        ts = self.start_timestamp.split('T')
+        ts = ts[1]
+        ts = re.sub('[^0-9:]','',ts).split(':')
+        sec_start = int(ts[0])*3600 + int(ts[1])*60+int(ts[2])
+        self.duration = sec_end - sec_start
+        print self.duration
+
+
+
+        x = self.get_distance()
+        
+
+    def get_pace(self):
+        pass
+
+    def get_distance(self):
+
+        print 'hei'
+        dist = 0
+        lon = []
+        lat = []     
+        for coord in self.coordinates:
+            tmp = re.compile(r'[^\d.]+')
+            tmp = tmp.sub('',coord)
+            lon.append(tmp[:9])
+            lat.append(tmp[10:])
+
+
+        for i in range(0,len(lon)-1):
+            lon0 = float(lon[i])
+            lon1 = float(lon[i+1])
+            lat0 = float(lat[i])
+            lat1 = float(lat[i+1])
+
+            lon0, lat0, lon1, lat1 = map(radians, [lon0, lat0, lon1, lat1])
+            # haversine formula 
+            dlon = lon1 - lon0 
+            dlat = lat1 - lat0 
+            a = sin(dlat/2.0)**2 + cos(lat0) * cos(lat1) * sin(dlon/2.0)**2
+            c = 2 * asin(sqrt(a))
+            print dist
+            dist+= 6367*c
+
+
+            
+        return dist
+
+
+       
 
     def get_number_of_samples(self):
         return len(self.timestamps)
+
+
+
+    def convert_to_seconds(self):
+        # convert the timestamp to seconds
+        ts = string.split('T')
+        print ts
+        ts = ts[1]
+        ts = re.sub('[^0-9:]','',ts).split(':')
+        sec = int(ts[0])*3600 + int(ts[1])*60+int(ts[2])
+        return sec
 
 
     def get_start_timestamp(self):
@@ -48,65 +122,60 @@ class gpxObject:
 
     
 
-def get_duration(lines):
-    s = convert_to_seconds(str(get_end_timestamp(lines))) - convert_to_seconds(str(get_start_timestamp(lines)))
-    return s
+    def get_duration(self):
+        x = self.get_end_timestamp()
+        y = self.get_start_timestamp()
+        print self.convert_to_seconds().get_end_timestamp()        
+
+        return 0
 
 
-def get_date_from_timestamp(timestamp):
-    date = timestamp.split('T')[0] + 'T'
-    return date
+    def get_date_from_timestamp(timestamp):
+        date = timestamp.split('T')[0] + 'T'
+        return date
 
-def convert_to_timestamp(seconds,timestamp):
-    ts = ''
-    ts += get_date_from_timestamp(timestamp)
-    rem_h = seconds%3600
-    h = seconds/3600
-    s = rem_h%60
-    m = rem_h/60
+    def convert_to_timestamp(seconds,timestamp):
+        ts = ''
+        ts += get_date_from_timestamp(timestamp)
+        rem_h = seconds%3600
+        h = seconds/3600
+        s = rem_h%60
+        m = rem_h/60
     
-    ts += str(h).zfill(2)+':' + str(m).zfill(2) +':'+ str(s).zfill(2) + 'Z'
-    return ts 
-    
-
-def get_distance():
-    x = raw_input('Write in the length of the run in kilometers\n\n')
-    return x    
-
-def distance_and_time_to_pace(distance, time_in_seconds):
-    rem = time_in_seconds % 60
-    m = time_in_seconds/60
-    pace = str(m).zfill(2) + str(rem).zfill(2)
-    return pace
-
+        ts += str(h).zfill(2)+':' + str(m).zfill(2) +':'+ str(s).zfill(2) + 'Z'
+        return ts 
     
 
-def convert_to_seconds(timestamp):
-    # convert the timestamp to seconds
-    ts = timestamp.split('T')
-    print ts
-    ts = ts[1]
-    ts = re.sub('[^0-9:]','',ts).split(':')
-    sec = int(ts[0])*3600 + int(ts[1])*60+int(ts[2])
-    return sec
 
-def set_date():
-    print 'Write in todays date\n'
-    ts = raw_input('On the form yy-mm-dd\n')
-    return ts +'T'
+    def distance_and_time_to_pace(distance, time_in_seconds):
+        rem = time_in_seconds % 60
+        m = time_in_seconds/60
+        pace = str(m).zfill(2) + str(rem).zfill(2)
+        return pace
 
-def set_start_time():
-    print 'Write the start time'
-    st = raw_input('On the form hh:mm:ss')
-    return st + 'Z'
+    
 
 
-def parse_coordinates():
-    pass    
+    def set_date():
+        print 'Write in todays date\n'
+        ts = raw_input('On the form yy-mm-dd\n')
+        return ts +'T'
+
+    def set_start_time():
+        print 'Write the start time'
+        st = raw_input('On the form hh:mm:ss')
+        return st + 'Z'
+
+
+    def parse_coordinates():
+        pass    
 
 
 
 x = gpxObject('Laffing_i_ghettoen.gpx')
+
+
+
 #for elem in x.timestamps:
 #    print elem
 
