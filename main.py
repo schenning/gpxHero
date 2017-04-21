@@ -4,6 +4,7 @@ import fileinput
 import re
 import six
 from math import radians, cos, sin, asin, sqrt
+import datetime
 
 class gpxObject:
 
@@ -41,26 +42,26 @@ class gpxObject:
         #### Convert to seconds
 
 
-        # convert the timestamp to seconds
+        # convert timestamp to seconds
         ts = self.end_timestamp.split('T')
         ts = ts[1]
         ts = re.sub('[^0-9:]','',ts).split(':')
         sec_end = int(ts[0])*3600 + int(ts[1])*60+int(ts[2])
-        # convert the timestamp to seconds
+        # convert timestamp to seconds
         ts = self.start_timestamp.split('T')
         ts = ts[1]
         ts = re.sub('[^0-9:]','',ts).split(':')
         sec_start = int(ts[0])*3600 + int(ts[1])*60+int(ts[2])
         self.duration = sec_end - sec_start
         print self.duration
-
-
-
-        x = self.get_distance()
-        
-
+        #x = self.get_distance()
+        #print x
+        print str(datetime.timedelta(seconds=self.duration))
     def get_pace(self):
         pass
+        print 'Not in use'
+        raise 'Value Error'
+
 
     def get_distance(self):
 
@@ -68,6 +69,7 @@ class gpxObject:
         dist = 0
         lon = []
         lat = []     
+        d = 0
         for coord in self.coordinates:
             tmp = re.compile(r'[^\d.]+')
             tmp = tmp.sub('',coord)
@@ -75,24 +77,24 @@ class gpxObject:
             lat.append(tmp[10:])
 
 
-        for i in range(0,len(lon)-1):
+        for i in range(0,len(lon)-1,2):
             lon0 = float(lon[i])
             lon1 = float(lon[i+1])
             lat0 = float(lat[i])
             lat1 = float(lat[i+1])
-
+            d += 2*asin(sqrt(sin((lat1-lat0)/2)**2 + cos(lat0)*cos(lat1) * sin((lon1-lon0)/2)**2))
             lon0, lat0, lon1, lat1 = map(radians, [lon0, lat0, lon1, lat1])
             # haversine formula 
             dlon = lon1 - lon0 
             dlat = lat1 - lat0 
             a = sin(dlat/2.0)**2 + cos(lat0) * cos(lat1) * sin(dlon/2.0)**2
             c = 2 * asin(sqrt(a))
-            print dist
-            dist+= 6367*c
+            dist+= 6500*c
+
 
 
             
-        return dist
+        return dist, d*6399
 
 
        
@@ -142,18 +144,15 @@ class gpxObject:
         s = rem_h%60
         m = rem_h/60
     
-        ts += str(h).zfill(2)+':' + str(m).zfill(2) +':'+ str(s).zfill(2) + 'Z'
+        ts += str(h).zfill(2) +':' + str(m).zfill(2) + ':'+ str(s).zfill(2) + 'Z'
         return ts 
     
-
 
     def distance_and_time_to_pace(distance, time_in_seconds):
         rem = time_in_seconds % 60
         m = time_in_seconds/60
         pace = str(m).zfill(2) + str(rem).zfill(2)
         return pace
-
-    
 
 
     def set_date():
@@ -169,7 +168,6 @@ class gpxObject:
 
     def parse_coordinates():
         pass    
-
 
 
 x = gpxObject('Laffing_i_ghettoen.gpx')
