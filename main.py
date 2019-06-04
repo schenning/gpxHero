@@ -1,3 +1,5 @@
+#Written by henning
+
 import sys
 import fileinput
 #import man
@@ -5,6 +7,7 @@ import re
 import six
 from math import radians, cos, sin, asin, sqrt
 import datetime
+import random
 
 class gpxObject:
 
@@ -130,7 +133,8 @@ class gpxObject:
         print self.convert_to_seconds().get_end_timestamp()        
 
         return 0
-
+    def add_gaussian_noise(self, var, mean=0):
+        return np.random.normal(mean, var, 1)
 
     def get_date_from_timestamp(timestamp):
         date = timestamp.split('T')[0] + 'T'
@@ -177,7 +181,7 @@ x = gpxObject('Laffing_i_ghettoen.gpx')
 #for elem in x.timestamps:
 #    print elem
 
-#print x.get_number_of_samples()
+print x.get_number_of_samples()
 """
 timestamps = []
 coordinates = []
@@ -196,10 +200,10 @@ for elem in timestamps:
 for elem in coordinates:
     print elem
 """
-#print get_start_timestamp(timestamps)
-#print get_end_timestamp(timestamps)
-#print get_duration(timestamps)
-#print get_distance()
+print get_start_timestamp(timestamps)
+print get_end_timestamp(timestamps)
+print get_duration(timestamps)
+print get_distance()
 """
 for i, line in enumerate(fileinput.input('Laffing_i_ghettoen.gpx', inplace=1)):
     if '<time>' in line:
