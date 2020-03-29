@@ -9,7 +9,7 @@ import re
 # Take in from argv
 # Heart rate
 # convert to seconds
- 
+# discontinue project 
 
 
 
